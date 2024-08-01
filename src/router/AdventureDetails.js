@@ -1,6 +1,6 @@
 const express = require("express")
 
-const { CreateNewAdventureDetailController } = require("./../controller/AdventureDetail.controller")
+const { CreateNewAdventureDetailController } = require("./../controller/AdvDetails.controller")
 
 const AdventureDetailRouter = express.Router();
 

@@ -1,4 +1,4 @@
-const { CreateNewAdventureDetailInDbService } = require("./../service/AdventureDetail.Service")
+const { CreateNewAdventureDetailInDbService } = require("./../service/AdvDetails.Service")
 
 const httpStatus = require("http-status")
 
