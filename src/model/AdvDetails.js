@@ -1,19 +1,19 @@
 const mongoose = require("mongoose");
 
-const AdventureSchema = new mongoose.Schema({
+const AdvDetailsSchema = new mongoose.Schema({
     cityId : {
         type : mongoose.Schema.Types.ObjectId,
-        rel : "cities",
+        rel : "adventures",
         required : true
     },
-    name : {
+    subtitle : {
         type : String,
         required : true
     },
-    category : {
+    descrption : {
         type : [String]
     },
-    images : {
+    openingTime : {
         type : [String],
         required : true
     },
@@ -31,6 +31,6 @@ const AdventureSchema = new mongoose.Schema({
     }
 })
 
-const AdventureModel = mongoose.model("adventures", AdventureSchema)
+const AdvDetailsModel = mongoose.model("adventures", AdvDetailsSchema)
 
-module.exports = AdventureModel
+module.exports = AdvDetailsModel

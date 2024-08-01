@@ -1,10 +1,12 @@
-const UserModel = require('./../model/Usermodel')
+const UserModel = require("./../model/User.Model")
 
-async function CreateNewUserInDBService(name, email, phone, password){
+async function CreateNewUserInDBService(name, email, encryptedPassword){
     try{
 
         const result = await UserModel.create({
-            name, email, phone, password 
+            name,
+            email,
+            password : encryptedPassword
         })
 
         if(result){
@@ -12,6 +14,8 @@ async function CreateNewUserInDBService(name, email, phone, password){
                 success : true,
                 data : result
             }
+        }else{
+            throw new Error(" CreateNewUserInDBService unable to create user")
         }
 
     }catch(error){

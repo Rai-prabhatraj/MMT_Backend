@@ -1,26 +1,40 @@
-const {CreateNewUserInDBService} = require("./../service/User.service")
+const httpStatus = require("http-status")
+const bcrypt = require('bcrypt')
+const { CreateNewUserInDBService } = require("./../service/User.service")
 
 async function CreateNewUserController(request, response){
     try{
 
-        const { name, email, phone, password} = request.body
+        const {name, email, password} = request.body
 
-        const result = await CreateNewUserInDBService(name, email, phone, password)
-
-        if(!result.success){
-            throw new Error("CreateNewUserInDBService failed to complete task")
+        if(!name || !email || !password){
+            response.status(httpStatus.BAD_REQUEST).json({
+                success : false,
+                message : "Email, Name & Password is required"
+            })
+            return
         }
 
-        response.status(201).json({
-            success : true,
-            data : result.data
-        })
+        const SALT = bcrypt.genSaltSync(10)
+
+        const encryptedPassword = bcrypt.hashSync(password, SALT)
+
+        const result = await CreateNewUserInDBService(name, email, encryptedPassword)
+
+        if(result.success){
+            response.status(httpStatus.CREATED).json({
+                success : true,
+                message : "User registered successfully"
+            })
+        }else{
+            throw new Error("CreateNewUserController unable to create a new user")
+        }
 
     }catch(error){
         console.log(error)
-        response.status(500).json({
+        response.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             success : false,
-            message : "Something went wrong" 
+            message : "Something went wrong"
         })
     }
 }
