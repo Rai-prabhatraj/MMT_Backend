@@ -1,5 +1,4 @@
-const e = require("express")
-const {CreateNewCityInDBService, GetallcityService, UpdatecityService, DeleteCityService} = require("./../service/City.Service")
+const {CreateNewCityInDBService, GetAllCityFromDBService, UpdateACityInDBService} = require("./../service/City.Service")
 
 async function CreateNewCityConytoller(request, response){
     try{
@@ -25,109 +24,96 @@ async function CreateNewCityConytoller(request, response){
         })
     }
 }
-async function GetallcityController(req,res){
-    try {
 
-        const result = await GetallcityService()
+async function GetAllCityController(request, response){
+    try{
 
-if(result.success) {
-    const DATA = result.data.map((element) => {
-        const { _id, name, description, cuisines, image } = element
+        const result = await GetAllCityFromDBService()
 
-        return {
-            id: _id,
-            name,
-            description,
-            cuisines,
-            image
-        }   
-    })
+        if(result.success){
 
-    res.status(200).json({
-        success : true,
-        data : DATA
-    })
+            const DATA = result.data.map((element)=>{
 
-    }else{
-        throw new Error("Error")
+                const {_id, name, description, cuisines, image} = element
 
-} 
-
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            success : false,
-            message : "Something went wrong"
-            })
-    }
-
-}
-
-async function UpdatecityContoller(req,res) {
-    try {
-        const {id : cityId} = req.query
-    const {name, description, image, cuisines} = req.body
-const DATA = {}
-if (name) {
-    DATA.name = name
-}
-if (description) {
-    DATA.description = description
-}
-if (cuisines){
-    DATA.cuisines = cuisines
-}
-if (image) {
-    DATA.image = image
-}
-
-
-   const result = await UpdatecityService(cityId, DATA)
-   if(result.success) {
-    res.status(200).json({
-        success : true,
-        message : "City updated successfully"
-        })
-
-    
-    }else{
-        throw new Error("Error")
-    
-   }
-
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            success : false,
-            message : "Something went wrong"
+                return {
+                    id : _id,
+                    name,
+                    description,
+                    cuisines,
+                    image
+                }
+                
             })
-        
+
+            response.status(200).json({
+                success : true,
+                data : DATA
+            })
+
+        }else{
+            throw new Error("GetAllCityFromDBService didn't give any city")
+        }
+
+    }catch(error){
+        console.log(error)
+        response.status(500).json({
+            success : false,
+            message : "Something went wrong" 
+        })
     }
-    
 }
 
-async function DeletecityController(req, res) {
-    try {
-        const { id: cityId } = req.query;
+async function UpdateACityController(request, response){
+    try{
 
-        const result = await DeleteCityService(cityId);
-        if (result.success) {
-            res.status(200).json({
-                success: true,
-                message: "City deleted successfully"
-            });
-        } else {
-            throw new Error("DeleteCityService failed to complete task");
+        const {id : cityId} = request.query
+
+        const {name, description, image, cuisines} = request.body
+
+        const DATA = {}
+
+        if(name){
+            DATA.name = name
         }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            success: false,
-            message: "Something went wrong"
-        });
+
+        if(description){
+            DATA.description = description
+        }
+
+        if(image){
+            DATA.image = image
+        }
+
+        if(cuisines){
+            DATA.cuisines = cuisines
+        }
+
+        const result = await UpdateACityInDBService(cityId, DATA)
+
+        if(result.success){
+
+           response.status(200).json({
+                success : true,
+                data : response.data
+           })
+
+        }else{
+            throw new Error("UpdateACityInDBService didn't give result")
+        }
+
+
+    }catch(error){
+        console.log(error)
+        response.status(500).json({
+            success : false,
+            message : "Something went wrong" 
+        })
     }
 }
 
 module.exports = {
-    CreateNewCityConytoller,GetallcityController,UpdatecityContoller,DeletecityController
+    CreateNewCityConytoller,
+    GetAllCityController,
+    UpdateACityController
 }

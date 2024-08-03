@@ -1,12 +1,13 @@
 const express = require("express");
-const { CreateNewCityConytoller, GetallcityController, UpdatecityContoller, DeletecityController} = require("./../controller/City.controller");
-
+const { CreateNewCityConytoller, GetAllCityController , UpdateACityController} = require("./../controller/City.controller")
+const {AdminAuthorizationMiddleware} = require("./../middlewares/Authorization.middleware")
 
 const CityRouter = express.Router();
 
-CityRouter.post("/add", CreateNewCityConytoller)
-CityRouter.get("/all",GetallcityController)
-CityRouter.put("/update",UpdatecityContoller)
-CityRouter.delete("/delete",DeletecityController)
+CityRouter.post("/add", AdminAuthorizationMiddleware, CreateNewCityConytoller)
+
+CityRouter.get("/all", GetAllCityController)
+
+CityRouter.put("/update", AdminAuthorizationMiddleware, UpdateACityController)
                                          
 module.exports = CityRouter;

@@ -24,89 +24,75 @@ async function CreateNewCityInDBService(name, image, description, cuisines){
         }
     }
 }
-async function GetallcityService(){
-    try {
+
+async function GetAllCityFromDBService(){
+    try{
 
         const result = await CityModel.find()
+
         if(result){
             return {
                 success : true,
                 data : result
-                }
+            }
         }else{
-            throw new Error("Error")
+            throw new Error("GetAllCityFromDBService unable to get the city")
         }
-        
-    } catch (error) {
+
+    }catch(error){
         console.log(error)
-        return{
+        return {
             success : false
         }
-        
     }
-
 }
-async function UpdatecityService(cityId,data) {
-    try {
-       const {name,description,cuisines,image} = data
-       const cityDocument = await CityModel.findById(cityId)
 
-        if (name) {
+async function UpdateACityInDBService(cityId, data){
+    try{
+
+        const {name, description, cuisines, image} = data
+
+        const cityDocument = await CityModel.findById(cityId)
+
+        if(name){
             cityDocument.name = name
         }
-        if (description) {
+        
+        if(description){
             cityDocument.description = description
         }
-        if (cuisines){
+
+        if(cuisines){
             cityDocument.cuisines = cuisines
         }
-        if (image) {
+
+        if(image){
             cityDocument.image = image
         }
 
-       const result = await cityDocument.save()
+        const result = await cityDocument.save()
 
-       if(result){
-        return{
-            success : true,
-            data : result
-        }
-       
-        } else {
-            throw new Error(`unable to update city by id : ${cityId}`);
-        }
-       
-    } catch (error) {
-        console.log(error);
-        return {
-            success: false,
-            message: "error"
-        };
-    }
-    
-    
-}
+        if(result){
 
-async function DeleteCityService(cityId) {
-    try {
-        const result = await CityModel.findByIdAndDelete(cityId);
-        if (result) {
             return {
-                success: true,
-                message: "City deleted successfully"
-            };
-        } else {
-            throw new Error(`City with id ${cityId} not found`);
+                success : true,
+                data : result
+            }
+
+        }else{
+            throw new Error(`UpdateACityInDBService unable to update the city with id : ${cityId}`)
         }
-    } catch (error) {
-        console.log(error);
+
+    }catch(err){
+        console.log(err)
         return {
-            success: false,
-            message: "Error deleting city"
-        };
+            success : false
+        }
     }
 }
 
 module.exports = {
-    CreateNewCityInDBService,GetallcityService,UpdatecityService,DeleteCityService
+    CreateNewCityInDBService,
+    GetAllCityFromDBService,
+    UpdateACityInDBService
 }
